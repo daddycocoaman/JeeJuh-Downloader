@@ -32,6 +32,7 @@ function downloadFiles($links, $output, $url)
     {
         $link.outerHTML -match ".*\>(?<name>.*)\</a\>" | Out-Null
         $dlLink = -join ($domain,$link.href)
+        $dlLink = $dlLink -replace "amp;", ""
         $name = $Matches['name']
         $trackname = $name.split("-")[1].Trim()
 
@@ -43,7 +44,9 @@ function downloadFiles($links, $output, $url)
         }
 
         $outFile = Join-Path -Path $path -ChildPath $name
-        Invoke-WebRequest -Uri $dlLink -Outfile $outFile -Headers $headers -SessionVariable session
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Headers.add('Referer', $url)
+        $webClient.DownloadFile($dlLink, $outFile)
         Write-Host "Saving $name to $outFile..."
     }
 }
