@@ -52,23 +52,42 @@ def get_links(url: str) -> List[Soup]:
 def download_content(
     task_id: TaskID, filename: str, url: str, orig_url: str, output: Path
 ):
-    req = Request("https://jeejuh.com" + url, headers={"referrer": orig_url})
+
+    headers = {
+        "method": "GET",
+        "authority": "www.jeejuh.com",
+        "scheme": "https",
+        "path": url,
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75",
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-user": "?1",
+        "sec-fetch-dest": "document",
+        "referer": orig_url,
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+    }
+
+    req = Request("https://www.jeejuh.com" + url, headers=headers)
     response = urlopen(req)
     progress.update(task_id, total=int(response.info()["Content-length"]))
 
     folder = filename.split(" - ")[1]
+    Path(output / folder).mkdir(parents=True, exist_ok=True)
     dest_file = output / folder / filename
 
-    with dest_file.open(mode="wb") as file:
-        progress.start_task(task_id)
+    progress.start_task(task_id)
+    with open(dest_file, "wb") as file:
         for data in iter(partial(response.read, 32768), b""):
-            file.write_bytes(data)
+            file.write(data)
             progress.update(task_id, advance=len(data))
 
 
 def start_downloads(urls: List[Soup], orig_url: str, output: Path):
     with progress:
-        with ThreadPoolExecutor(max_workers=5) as pool:
+        with ThreadPoolExecutor(max_workers=10) as pool:
             for url in urls:
                 task_id = progress.add_task("download", filename=url.text, start=False)
                 pool.submit(
@@ -99,3 +118,7 @@ def download(
 ):
     links = get_links(url)
     start_downloads(links, url, output)
+
+
+if __name__ == "__main__":
+    app()
