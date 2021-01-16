@@ -1,9 +1,11 @@
 [tool.poetry]
 name = "jeejuh-dl"
-version = "1.0.0"
+version = "1.0.1"
 description = "Downloads links from jeejuh.com purchases"
 authors = ["Leron Gray"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/daddycocoaman/JeeJuh-Downloader"
 
 [tool.poetry.dependencies]
 python = "^3.8"
