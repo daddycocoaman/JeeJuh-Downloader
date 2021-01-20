@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jeejuh-dl"
-version = "1.0.1"
+version = "1.1"
 description = "Downloads links from jeejuh.com purchases"
 authors = ["Leron Gray"]
 license = "MIT"

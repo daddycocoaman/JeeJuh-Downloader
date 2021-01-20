@@ -25,3 +25,23 @@ However, you can install the normal way from PyPi with `python3 -m pip install j
 ## Usage
 
 `jeejuh-dl <URL>`
+
+```
+Usage: jeejuh-dl [OPTIONS] URL
+
+Arguments:
+  URL  URL to jeejuh.com download page  [required]
+
+Options:
+  --output DIRECTORY              [default: .]
+  -t, --threads INTEGER           Max number of concurrent downloads
+                                  [default: 5]
+
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+
+  --help                          Show this message and exit.
+```
