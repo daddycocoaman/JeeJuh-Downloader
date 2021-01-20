@@ -85,9 +85,9 @@ def download_content(
             progress.update(task_id, advance=len(data))
 
 
-def start_downloads(urls: List[Soup], orig_url: str, output: Path):
+def start_downloads(urls: List[Soup], orig_url: str, output: Path, threads: int):
     with progress:
-        with ThreadPoolExecutor(max_workers=10) as pool:
+        with ThreadPoolExecutor(max_workers=threads) as pool:
             for url in urls:
                 task_id = progress.add_task("download", filename=url.text, start=False)
                 pool.submit(
@@ -115,9 +115,12 @@ def download(
     output: Path = typer.Option(
         ".", exists=True, file_okay=False, writable=True, resolve_path=True
     ),
+    threads: int = typer.Option(
+        5, "--threads", "-t", help="Max number of concurrent downloads"
+    ),
 ):
     links = get_links(url)
-    start_downloads(links, url, output)
+    start_downloads(links, url, output, threads)
 
 
 if __name__ == "__main__":
